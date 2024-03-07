@@ -1,8 +1,8 @@
 import {combineReducers} from '@reduxjs/toolkit'
-import {reducer as exampleReducer} from "../slices/example"
+import {reducer as countriesReducer} from "../slices/countries"
 
 const rootReducer=combineReducers({
-    example:exampleReducer
+    countries:countriesReducer
 })
 
 export default rootReducer
