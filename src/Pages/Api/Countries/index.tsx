@@ -2,12 +2,12 @@ import { useEffect, useState } from "react"
 import TeamSection12 from "../../../Components/Cards"
 import SearchInput from "../../../Components/Inputs/Search"
 import SelectOneInput from "../../../Components/Inputs/Select"
-import { getAllCountriesByName, getAllCountriesByRegion, getAllCountriesWithParams } from "../../../Data/slices/countries"
+import { getAllCountries, getAllCountriesByName, getAllCountriesByRegion, getAllCountriesWithParams } from "../../../Data/slices/countries"
 import supabase from "../../../Utils/api"
 import { useAppDispatch, useAppSelector, useAuthGuard } from "../../../Utils/hooks"
 
 export default function Countries(){
-    // useAuthGuard()
+    useAuthGuard()
 
     //Here we are selecting values from store 📕
   const {loading,data}=useAppSelector(state=>state.countries)
@@ -17,6 +17,7 @@ export default function Countries(){
   
   useEffect(()=>{
     dispatch(getAllCountriesWithParams({fields:'name,capital,flags,population,region'}))
+    dispatch(getAllCountries())
   },[dispatch])
 
   const [searchValue,setSearchValue]=useState<string | null>(null)

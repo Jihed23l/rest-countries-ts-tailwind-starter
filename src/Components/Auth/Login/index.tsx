@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { handleUserAuthentication } from '../../../Data/slices/auth';
+import { login } from '../../../Data/slices/auth';
 import FormAction from '../../../Pages/Auth/Login/FormAction';
 import FormExtra from '../../../Pages/Auth/Login/FormExtra';
 import supabase from '../../../Utils/api';
@@ -29,30 +29,16 @@ export default function Login(){
     const navigate=useNavigate()
     //Handle Login API Integration here
     const authenticateUser = async () =>{
-        const {email,password}=loginState
-        
-         const { data, error } = await supabase.auth.signInWithPassword({
-                email,
-                password,
-        })
+       await  dispatch(login(loginState))
+       navigate('/countries')
+        //     const settedSession = await supabase.auth.setSession({
+        //         access_token:data?.session?.access_token,
+        //         refresh_token:data?.session?.refresh_token
+        //     })
 
-        if (!error){
-             toast.success('logged in successfully')
-
-            const settedSession = await supabase.auth.setSession({
-                access_token:data?.session?.access_token,
-                refresh_token:data?.session?.refresh_token
-            })
-
-            // const forgetPassword = await supabase.auth.resetPasswordForEmail(email, {
-            //         redirectTo: 'https://localhost:3000/update-password',
-            // })
-            navigate('/countries')
-        }
-        else  if (error?.status === 400 && error?.message){
-            toast.error(error?.message)
-        }
-
+        //     // const forgetPassword = await supabase.auth.resetPasswordForEmail(email, {
+        //     //         redirectTo: 'https://localhost:3000/update-password',
+        //     // })
     }
 
     return(

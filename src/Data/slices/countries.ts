@@ -1,5 +1,6 @@
 import {createAsyncThunk, createSlice,PayloadAction} from '@reduxjs/toolkit'
 import { toast } from 'react-toastify'
+import supabase from '../../Utils/api';
 import axiosInstance from '../../Utils/axios';
 
 interface DataState{
@@ -76,6 +77,25 @@ export const getAllCountriesByRegion = createAsyncThunk(
   }
 }
 ); 
+
+export const getAllCountries = createAsyncThunk(
+  "countries/getAllCountries",
+  async (queries, thunkAPI) => {
+  let data;
+  try {
+    const { data, error } = await supabase
+            .from('Countries')
+            .select('')
+    if (!error) {
+       return data
+    }
+    throw new Error(error.message);
+  } catch (err:any) {
+    return Promise.reject(err.message ? err.message : err);
+  }
+}
+); 
+
 
 const slice=createSlice({
     name:'countries',

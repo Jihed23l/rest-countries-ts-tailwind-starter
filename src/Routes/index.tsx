@@ -14,8 +14,8 @@ function AppRoutes() {
 
   return (
 <>
-<Navbar/>
      <BrowserRouter>
+        <Navbar/>
         <Routes>
             <Route path="/" element={<LoginPage/>}/>
             <Route path="/signup" element={<SignupPage/>}/>

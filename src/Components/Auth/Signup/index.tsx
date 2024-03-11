@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { signup } from '../../../Data/slices/auth';
 import FormAction from '../../../Pages/Auth/Login/FormAction';
 import supabase from '../../../Utils/api';
 import { signupFields } from '../../../Utils/constants';
+import { useAppDispatch } from '../../../Utils/hooks';
 import Input from '../../Inputs/Input';
 
 const fields=signupFields;
@@ -11,18 +13,12 @@ fields.forEach(field => fieldsState[field.id]='');
 
 export default function Signup(){
   const [signupState,setSignupState]=useState(fieldsState);
-
+  const dispatch=useAppDispatch()
   const handleChange=(e:React.ChangeEvent<HTMLInputElement>)=>setSignupState({...signupState,[e.target.id]:e.target.value});
 
   const handleSubmit= async (e:React.ChangeEvent<HTMLFormElement>)=>{
     e.preventDefault();
-    const { data, error } = await supabase.auth.signUp({
-        email: signupState?.email,
-        password: signupState?.password,
-    })
-    console.log('data',data)
-    console.log('error',error)
-    
+    dispatch(signup({email:signupState?.email,password:signupState?.password}))
   }
 
     return(
