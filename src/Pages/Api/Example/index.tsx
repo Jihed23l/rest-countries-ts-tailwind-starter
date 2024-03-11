@@ -1,23 +1,31 @@
 import { useEffect, useState } from "react";
 import supabase from "../../../Utils/api";
+import { useAuthGuard } from "../../../Utils/hooks";
 
 export default function Example(){
+    useAuthGuard()
     
+    const [isInsertedData,setIsInsertedData]=useState(false)
 
-    useEffect(()=>{
-        async function fetchData(){
-            const { data, error } = await supabase
-            .from('Countries')
-            .select('id,capital')
+   async function insertData(){
+        const { error } = await supabase
+        .from('Countries')
+        .insert({capital:'London'})
+        setIsInsertedData(true)
+   }
 
-            console.log('Data',data)
-            console.log('error',error)
-          }
-          fetchData()
-     },[])
+   async function updateDate(){
+        const { error } = await supabase
+        .from('Countries')
+        .update({ capital: 'Madrid' })
+        .eq('id', 10)
+        .select()
+   }
     return (
         <>
-            <button >CREATE NEW COUNTRY</button>
+            {/* <button onClick={()=>insertData()} >CREATE NEW COUNTRY</button> */}
+            <button onClick={()=>updateDate()} >UPDATE EXISTING COUNTRY</button>
+     
         </>
     )
 }

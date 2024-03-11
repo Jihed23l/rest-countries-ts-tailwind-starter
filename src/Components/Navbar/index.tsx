@@ -1,9 +1,14 @@
-import {  useState } from 'react'
+import {  useEffect, useState } from 'react'
 import { Disclosure } from '@headlessui/react'
 import { Bars3Icon,  MoonIcon, SunIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { useAppDispatch, useAppSelector } from '../../Utils/hooks'
+import { logout } from '../../Data/slices/auth'
+import { NavLink } from 'react-router-dom'
 
 const navigation = [
-  { name: 'Where in the world', href: '#', current: true },
+  { name: 'Login', href: '/', current: true },
+  { name: 'Countries', href: '/countries', current: true },
+  { name: 'Example', href: '/example', current: true },
 ]
 
 function classNames(...classes:any) {
@@ -11,12 +16,23 @@ function classNames(...classes:any) {
 }
 
 export default function Navbar() {
-    const [darkMode,setDarkMode]=useState(false)
+      const [darkMode,setDarkMode]=useState(false)
+      const [authenticated,setAuthenticated]=useState(false)
+      const {isAuthenticated} = useAppSelector(state=>state.auth)
+
+
+      useEffect(()=>{
+        setAuthenticated(isAuthenticated)
+      },[isAuthenticated])
 
     const toggleDarkMode=()=>{
         setDarkMode(!darkMode)
     }
 
+    const dispatch=useAppDispatch()
+    const handleLogout=()=>{
+      dispatch(logout())
+    }
 
   return (
     <Disclosure as="nav" className={`${darkMode?'bg-white-900':'bg-gray-800'}`}>
@@ -49,17 +65,17 @@ export default function Navbar() {
                 <div className="hidden sm:ml-6 sm:block">
                   <div className="flex space-x-4">
                     {navigation.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.href}
-                        className={classNames(
-                          item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-                          'rounded-md px-3 py-2 text-sm font-medium'
-                        )}
-                        aria-current={item.current ? 'page' : undefined}
+                      <NavLink 
+                      key={item.name}
+                      to={item.href}
+                      className={classNames(
+                        item.current ? 'bg-gray-900 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                        'rounded-md px-3 py-2 text-sm font-medium'
+                      )}
+                      aria-current={item.current ? 'page' : undefined} 
                       >
                         {item.name}
-                      </a>
+                      </NavLink>
                     ))}
                   </div>
                 </div>
@@ -79,6 +95,13 @@ export default function Navbar() {
               )}
             </button>
     
+            <button onClick={()=>{ handleLogout() }}
+             className={`${!isAuthenticated ? 'hidden' :''} flex items-center justify-start w-45 h-45 rounded-lg cursor-pointer relative overflow-hidden 
+                       transition duration-300 shadow-md bg-af-white hover:w-125 hover:rounded-lg`} >
+             <div className=" right-0 w-auto opacity-100 text-night-rider font-semibold text-lg transition duration-300 text-white">
+              Logout
+             </div>
+             </button>
             </div>
           </div>
 
